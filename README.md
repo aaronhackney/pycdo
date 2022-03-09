@@ -3,11 +3,11 @@ This library abstracts many of the Cisco Defense Orchestrator APIs in an attempt
 
 # Requirements
 See requirements.txt for more information
-- Python Version 3.8 or newer is strongly recommended. 
+- Python Version 3.8 or newer is recommended. 
 - This library was developed uner Python 3.9 
 
 # Installation
-The intent is to make this library availaible in pypi. While it is under development, one can install via git hub. 
+The intent is to eventually make this library availaible in pypi. While it is under development, one can install via git hub. 
 
 ## Create virtual environment
 ```

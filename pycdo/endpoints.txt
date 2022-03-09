@@ -1,0 +1,11 @@
+
+/anubis/rest/v1/user/tenants
+/aegis/rest/v1/features
+/aegis/rest/v1/user/permissions
+/aegis/rest/v1/plugindevice/types
+/activity/activity
+/activity/device-status
+/aegis/rest/v1/user/settings
+/aegis/rest/v1/services/targets/devices
+/aegis/rest/v1/services/common/tenantcontext
+

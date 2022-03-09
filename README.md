@@ -21,20 +21,11 @@ cd cdo
 git clone https://github.com/aaronhackney/pycdo.git
 ```
 
-## Install library dependencies
+## Install library dependencies and the pycdo module
 ```
 cd pycdo
 pip install -r requirements.txt
-```
-
-## (OPTIONAL) Install for dev use
-```
-pip install wheel
-python setup.py bdist_wheel
-```
-## Install the CDO Module from the source tree
-```
-pip install -e .
+python3 setup.py install
 ```
 
 ## Test that the library is working in this virtual env

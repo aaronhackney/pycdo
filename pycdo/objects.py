@@ -63,5 +63,4 @@ class CDOObjects(CDOBaseClient):
                 cdo_objs.append(NetworkObject(**cdo_obj))
             else:
                 cdo_objs.append(cdo_obj)
-                print(cdo_obj["objectType"])  # Temporary until we find all we have all object types covered!
         return cdo_objs

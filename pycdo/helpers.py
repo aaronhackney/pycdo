@@ -4,6 +4,7 @@ PREFIX_LIST = {
     "DEBUGGING": "/aegis/rest/v1/services/state-machines/debugging",
     "DEVICE": "/aegis/rest/v1/device",
     "DEVICES": "/aegis/rest/v1/services/targets/devices",
+    "DEVICES-CONFIGS": "/aegis/rest/v1/services/asa/devices-configs",
     "INSTANCES": "/aegis/rest/v1/services/state-machines/instances",
     "JOBS": "/aegis/rest/v1/services/state-machines/jobs",
     "MSSP_DEVICES": "/api/theia/v1/devices",

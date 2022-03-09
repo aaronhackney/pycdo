@@ -16,6 +16,17 @@ class TestCDODevices:
         matched_devices = cdo_client.get_devices(search=all_devices[0].name)
         assert matched_devices
 
+    def test_get_device_configs(self, cdo_client: CDOClient):
+        """TODO"""
+
+    def test_is_device_exists(self, cdo_client: CDOClient):
+        all_devices = cdo_client.get_devices()
+        assert cdo_client.is_device_exists(all_devices[0].uid)
+
+    def test_is_device_exists_fail(self, cdo_client: CDOClient):
+        is_device_exists = cdo_client.is_device_exists("abc1234")
+        assert not is_device_exists
+
     def test_get_ftd_devices(self, cdo_client: CDOClient):
         all_devices = cdo_client.get_devices()
         for device in all_devices:

@@ -24,7 +24,6 @@ class CDOChangeLogs(CDOBaseClient):
             str: returns a query string or None
         """
         query = []
-        # events.user.keyword:"aahackne@cisco.com"
         query.append(f"events.user.keyword:\"{kwargs.get('user')}\"") if "user" in kwargs else None
         query.append(kwargs.get("change_log_state")) if "change_log_state" in kwargs else None
         query.append(kwargs.get("change_log_event_action")) if "change_log_event_action" in kwargs else None

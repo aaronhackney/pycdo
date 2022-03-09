@@ -6,7 +6,7 @@ import base64
 
 class EncryptCredentials:
     @staticmethod
-    def encrypt(clear_text: str, public_key: str):
+    def encrypt(clear_text: str, public_key: str) -> str:
         """Takes a clear text str and RSA public key and returns an encrypted byte string that's been base64 encoded
 
         Args:
@@ -14,7 +14,7 @@ class EncryptCredentials:
             public_key (str): RSA Public key that we will use to encrypt the clear_text
 
         Returns:
-            bytes: base64 encoded byte string of the encrypted clear_text data
+            string: base64 encoded string of the encrypted clear_text data
         """
         key = RSA.importKey(base64.b64decode(public_key).decode("utf-8"))
         encryptor = PKCS1_v1_5.new(key)

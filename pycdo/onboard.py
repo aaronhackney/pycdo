@@ -11,13 +11,8 @@ class CDOOnboard(CDOBaseClient):
     """Class for onboarding devices into CDO"""
 
     def onboard_asa(
-        self,
-        name: str,
-        host: str,
-        connector: Connector,
-        device_type: str = "ASA",
-        port: int = 443,
-    ):
+        self, name: str, host: str, connector: Connector, device_type: str = "ASA", port: int = 443
+    ) -> Device:
         """Step 1 to onboard a device to CDO. (Does not set credentials. See set_credentials for that)
 
         Args:
@@ -31,10 +26,10 @@ class CDOOnboard(CDOBaseClient):
             Device: A Device object containing the data sent back by the onboard API call
         """
         if connector.cdg:
-            lar_type = "CDG"
+            lar_type = "CDG"  # Cloud gateway
             lar_uid = None
         else:
-            lar_type = "SDC"
+            lar_type = "SDC"  # OnPrem SDC
             lar_uid = connector.uid
 
         post_data = {
@@ -50,7 +45,7 @@ class CDOOnboard(CDOBaseClient):
         onboarded_asa = Device(**self.post_operation(f"{self.PREFIX_LIST['DEVICES']}", json=post_data))
         return onboarded_asa
 
-    def set_credentials(self, device_uid, asa_user: str, asa_pass: str, sdc: Connector):
+    def set_credentials(self, device_uid: str, asa_user: str, asa_pass: str, sdc: Connector) -> dict:
         """Set the credentials for a recently onboarded ASA
         Args:
             device_uid (str): The UID of the device we want to set the credentials on
@@ -67,7 +62,7 @@ class CDOOnboard(CDOBaseClient):
             json=self._generate_credential_payload(asa_user, asa_pass, sdc),
         )
 
-    def _generate_credential_payload(self, asa_user: str, asa_pass: str, sdc: Connector):
+    def _generate_credential_payload(self, asa_user: str, asa_pass: str, sdc: Connector) -> dict:
         """If we use a cloud sdc, generate a simple, clear-text payload. If we use an On-Prem SDC, encrypt as needed
 
         Args:
@@ -78,12 +73,12 @@ class CDOOnboard(CDOBaseClient):
         Returns:
             dict: A dictionary containing the needed elements
         """
-        if sdc.cdg:
+        if sdc.cdg:  # CDGs accept clear text credentials
             return {
                 "state": "CERT_VALIDATED",
                 "credentials": f'{{"username":"{asa_user}","password":"{asa_pass}"}}',
             }
-        else:
+        else:  # SDCs require us to encrypt the credentials with the SDCs Public Key
             username = EncryptCredentials.encrypt(asa_user, sdc.lar_public_key.encoded_key)
             password = EncryptCredentials.encrypt(asa_pass, sdc.lar_public_key.encoded_key)
             key_id = sdc.lar_public_key.key_id

@@ -1,5 +1,6 @@
 from pycdo.base import CDOBaseClient
 from pycdo.model.devices import ASADevice, Device, FTDDevice
+from requests import HTTPError
 from typing import List
 import logging
 
@@ -25,8 +26,6 @@ class CDODevices(CDOBaseClient):
             params = None
         devices = []
         for device in self.get_operation(self.PREFIX_LIST["DEVICES"], params=params):
-            # for key, value in device.items():
-            #     print(f"{key}: {value} : {type(value)}")
             devices.append(Device(**device))
         return devices
 
@@ -69,6 +68,26 @@ class CDODevices(CDOBaseClient):
         """
         return ASADevice(**self.get_operation(f"{self.PREFIX_LIST['DEVICE']}/{device_uid}/specific-device"))
 
+    def get_asa_device_configs(self, device_uid: str) -> ASADevice:
+        """Given an ASA device uid, return the full details of the ASA device
+
+        Args:
+            device_uid (str): uid of the device to retrieve
+
+        Returns:
+            Device: ASADevice object containing the CDO device record and details
+        """
+        params = {"q": f"source.uid:{device_uid}"}
+        return self.get_operation(f"{self.PREFIX_LIST['DEVICES-CONFIGS']}", params=params)
+
+    def is_device_exists(self, device_uid: str) -> bool:
+        """Try to retrieve a device by uid. If it exists, return true, if not, catch error and return false"""
+        try:
+            self.get_asa_device(device_uid)
+            return True
+        except HTTPError as ex:
+            return False
+
     def is_state(self, device_uid: str, expected_state: str = "DONE"):
         """_summary_
 
@@ -77,7 +96,6 @@ class CDODevices(CDOBaseClient):
             device_uid (str): The device uid for which we want to retrieve state
             expected_state (str, optional): The state we wish to check for. Defaults to "DONE".
         """
-        # Needs to be generic device, not just ASA
         test_device = self.get_device(device_uid)
         if test_device.state == expected_state:
             return True

@@ -5,15 +5,12 @@ import os
 
 
 class TestOnboardingASA:
-    # DELETE /aegis/rest/v1/services/targets/devices/{device uid}}
     # TODO: Move test device details to environment variables
     ASA_NAME = "pytest-asav-1"
     ASA_IP = "172.30.4.101"
     ASA_PORT = "8443"
     ASA_USER = os.environ.get("ASA_USER")
     ASA_PASS = os.environ.get("ASA_PASS")
-    # SDC = "demo-red-SDC-bxlab"
-    # SDC = "Cloud Connector"
     SDC = "CDO_cisco_aahackne-SDC-1"
 
     def test_set_asa_credentials(self, cdo_client: CDOClient):

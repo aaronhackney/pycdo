@@ -40,7 +40,7 @@ class MyASAOnboard:
             logger.error(f"There was an issue adding the device {asa_name} to CDO")
             raise AddDeviceException(asa_name, asa_ip, asa_port)
 
-    def add_asa_credentials(self, asa_user: str, asa_password: str):
+    def add_asa_credentials(self, asa_user: str, asa_password: str) -> None:
         """Add the admin credentials for the ASA after assuring the device record is an a ready state"""
 
         poll = Polling()  # Make sure that the device in CDO is in a ready state; it may take a few seconds.

@@ -74,10 +74,15 @@ class Device(CDOContext):
     port: Optional[str]
     host: Optional[str]
     logging_enabled: Optional[bool] = Field(alias="loggingEnabled")
-    live_asa_device: Optional[bool] = Field(alias="liveAsaDevice")
+    live_asa_device: Optional[bool] = Field(alias="liveAsaDevice")  # Move to ASA class?
 
 
-# TODO: verify these data types
+class DeviceConfig(CDOContext):
+    source: Optional[dict]
+    target: Optional[dict]
+
+
+# TODO: verify these data types namespace: asa, type: configs
 class ASADevice(Device):
     asa_interfaces: Optional[List[ASAInterface]] = Field(alias="asaInterfaces")
     time_ranges: Optional[list] = Field(alias="timeRanges")
@@ -91,6 +96,7 @@ class ASADevice(Device):
     named_references: Optional[list] = Field(alias="namedReferences")
     object_version: Optional[int] = Field(alias="objectVersion")
     asac_config_generations_hash: Optional[str] = Field(alias="asacConfigGenerationsHash")
+    security_group_tags: Optional[list] = Field(alias="securityGroupTags")
 
 
 class FTDDevice(Device):

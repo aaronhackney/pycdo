@@ -9,5 +9,8 @@ logger = logging.getLogger(__name__)
 class CDOASAAccessLists(CDOBaseClient):
     """Class for getting changelogs from a CDO tenant"""
 
+    def get_all_access_groups(self):
+        """Return all access-groups"""
+
     def get_all_access_lists(self):
         """Return all access-lists"""

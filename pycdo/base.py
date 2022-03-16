@@ -1,5 +1,5 @@
 from functools import wraps
-from pycdo.helpers import PREFIX_LIST, CDO_REGION, DEVICE_TYPES
+from pycdo.helpers import PREFIX_LIST, DEVICE_TYPES
 from pycdo.errors import DuplicateObjectError
 import json
 import logging
@@ -37,7 +37,15 @@ class CDOBaseClient(object):
     """
 
     def __init__(self, api_token, region, api_version="", verify=""):
-        self.base_url = "https://" + CDO_REGION[region]
+        """This is the main client init process that controls all operations within CDO
+
+        Args:
+            api_token (str): _description_
+            region (str): Endpoint FQDN e.g. "defenseorchestrator.com" "apj.cdo.cisco.com" "defenseorchestrator.eu"
+            api_version (str, optional): For future use. Defaults to "1".
+            verify (str, optional): For suture use for the  custom CA certificate use-case. Defaults to "".
+        """
+        self.base_url = "https://" + region
         self.region = region
         self.http_session = requests.Session()
         self.set_headers(api_token)

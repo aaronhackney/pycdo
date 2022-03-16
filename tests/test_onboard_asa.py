@@ -17,7 +17,7 @@ class TestOnboardingASA:
         sdcs = cdo_client.get_sdc_list()
         sdc = [sdc for sdc in sdcs if sdc.name == self.SDC][0]
 
-        device = cdo_client.get_devices(search=self.ASA_NAME)[0]
+        device = cdo_client.get_target_devices(search=self.ASA_NAME)[0]
 
         credentialed_asa = None
         poll = Polling()

@@ -5,6 +5,7 @@ from pycdo.model.devices import ASADevice, Device, FTDDevice, DeviceConfig, Work
 from requests import HTTPError
 from typing import List
 import logging
+import json
 
 from pycdo.model.objects import ObjectType
 
@@ -202,3 +203,16 @@ class CDODevices(CDOBaseClient):
         else:
             logger.warning(f"Device's expected state {expected_state} not found!")
             return False
+
+    def update_access_policy(self, policy_uid: str, ace: AccessRule) -> AccessGroup:
+        """Update the access-policy with all of the access-rules presented
+
+        Args:
+            policy_uid (str): _description_
+            access_list (list[AccessRule]): AccessRules with we will replace/update the policy
+
+        Returns:
+            AccessGroup: modified access-group
+        """
+        payload = {"accessRules": [ace.dict(exclude_unset=True, by_alias=True)]}
+        return self.put_operation(f"{self.PREFIX_LIST['ACCESS_GROUPS']}/{policy_uid}", json=payload)

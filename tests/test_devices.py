@@ -104,3 +104,15 @@ class TestCDODevices:
         access_groups = cdo_client.get_asa_access_groups(workingset.uid)
         access_list = cdo_client.get_asa_access_policy(access_groups[0].uid)
         assert access_list
+
+    def test_update_policy(sefl, cdo_client: CDOClient):
+        asa = cdo_client.get_asa("TatianeASA")
+        workingset = cdo_client.get_workingset(asa.target_device.uid)
+        access_groups = cdo_client.get_asa_access_groups(workingset.uid)
+        access_list = cdo_client.get_asa_access_policy(access_groups[0].uid)
+        ace = access_list.access_rules[0]
+        assert ace.protocol.name == "ip"
+        ace.protocol.name = "tcp"
+        modified_acl = cdo_client.update_access_policy(access_groups[0].uid, ace)
+        # Deletes anything not in the update!
+        assert modified_acl

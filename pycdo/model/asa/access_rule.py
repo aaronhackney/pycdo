@@ -50,7 +50,7 @@ class AccessGroup(CDOContext):
     properties: Optional[dict]
     num_access_rules: Optional[int] = Field(alias="numAccessRules")
     issue_types: Optional[list] = Field(alias="issueTypes")
-    issue_counts: Optional[int] = Field(alias="issueCounts")
+    issue_counts: Optional[dict] = Field(alias="issueCounts")
     access_control_entry_counts: Optional[dict] = Field(alias="accessControlEntryCounts")  # TODO: model
     digests: Optional[list]
     global_remark: Optional[str] = Field(alias="globalRemark")

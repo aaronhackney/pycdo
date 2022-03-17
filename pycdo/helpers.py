@@ -2,6 +2,7 @@ import os
 
 # TODO: Make the version a variable
 PREFIX_LIST = {
+    "ACCESS_POLICIES": "/aegis/rest/v1/services/targets/accessgroups",
     "CHANGELOG_QUERY": "/aegis/rest/changelogs/query",
     "DEBUGGING": "/aegis/rest/v1/services/state-machines/debugging",
     "DEVICE": "/aegis/rest/v1/device",  # Maps instance device (eg ASA, FTD) to Target Device

@@ -160,10 +160,16 @@ class CDODevices(CDOBaseClient):
             "limit": limit,
             "offset": offset,
         }
-
-        test = self.get_operation(f"{self.PREFIX_LIST['ACCESS_GROUPS']}", params=params)
-
         return self.get_operation(f"{self.PREFIX_LIST['ACCESS_GROUPS']}", params=params)
+
+    def get_asa_access_policy(self, policy_uid):
+        # TODO: Model access-list data access_list['namespace']=targets, access_list['type']=accessgroups
+        """Get the access-list rules (ACEs) for the given access policy.
+
+        Args:
+            policy_uid (str): The UID of the access-group that is the parent of this policy
+        """
+        return self.get_operation(f"{self.PREFIX_LIST['ACCESS_POLICIES']}/{policy_uid}")
 
     def get_asa_workingset(self, target_uid):
         # TODO: Model working set data

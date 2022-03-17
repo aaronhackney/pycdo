@@ -92,8 +92,15 @@ class TestCDODevices:
         workingset = cdo_client.get_asa_workingset(asa.target_device.uid)
         assert workingset
 
-    def test_get_access_policies(self, cdo_client: CDOClient):
+    def test_get_access_groups(self, cdo_client: CDOClient):
         asa = cdo_client.get_asa("TatianeASA")
         workingset = cdo_client.get_asa_workingset(asa.target_device.uid)
         access_policies = cdo_client.get_asa_access_groups(workingset["uid"])
         assert access_policies
+
+    def test_get_access_policy(self, cdo_client: CDOClient):
+        asa = cdo_client.get_asa("TatianeASA")
+        workingset = cdo_client.get_asa_workingset(asa.target_device.uid)
+        access_policies = cdo_client.get_asa_access_groups(workingset["uid"])
+        access_list = cdo_client.get_asa_access_policy(access_policies[0]["uid"])
+        assert access_list

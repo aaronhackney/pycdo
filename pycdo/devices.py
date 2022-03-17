@@ -1,11 +1,9 @@
 from pycdo.model.asa.asa import ASA
-from pycdo.model.asa.access_rule import AccessRule, AccessGroup
 from pycdo.base import CDOBaseClient
 from pycdo.model.devices import ASADevice, Device, FTDDevice, DeviceConfig, WorkingSet
 from requests import HTTPError
 from typing import List
 import logging
-import json
 
 from pycdo.model.objects import ObjectType
 
@@ -81,14 +79,21 @@ class CDODevices(CDOBaseClient):
             resolve (str): The fields to reutrn from the query
 
         Returns:
-            Device: ASADevice object containing the CDO device record and details"""
+            ASADevice: ASADevice object containing the CDO device record and details"""
         params = {"q": f"uid:{device_uid}", "resolve": resolve}
         result = self.get_operation(f"{self.PREFIX_LIST['ASA_CONFIGS']}", params=params)
         if result:
             return ASADevice(**result[0])
 
-    def get_asa(self, name: str = "") -> ASA:
-        """This call removes the tedious tasks of matching up a CDO object to an ASA object and associated records."""
+    def get_asa(self, name: str) -> ASA:
+        """This call removes the tedious tasks of matching up a CDO object to an ASA object and associated records
+
+        Args:
+            name (str): The name of the ASA object in CDO that we wish to retrieve
+
+        Returns:
+            ASA: ASA object that contains the linked, associated objects and UIDs
+        """
         asa = ASA(name=name)
         for device in self.get_target_devices(search=name):
             if device.name == name:
@@ -103,6 +108,14 @@ class CDODevices(CDOBaseClient):
                     return asa
 
     def identify_device(self, device):
+        """Given a devie object, attempt to returned a specific device type (ASA, FTD, etc)
+
+        Args:
+            device (dict): Device object
+
+        Returns:
+            ASADevice or FTDDevice: Return a device object or the original dict if no datatype is found
+        """
         if device["namespace"] == "asa":
             return ASADevice(**device)
         elif device["namespace"] == "firepower":
@@ -128,7 +141,7 @@ class CDODevices(CDOBaseClient):
             target_uid (str): The CDO target object UID
 
         Returns:
-            dict: type: workingset namespace: common
+            WorkingSet: workingset object
         """
         post_data = {
             "selectedModelObjects": [{"modelClassKey": "targets/devices", "uuids": [target_uid]}],
@@ -136,53 +149,15 @@ class CDODevices(CDOBaseClient):
         }
         return WorkingSet(**self.post_operation(f"{self.PREFIX_LIST['WORKINGSET']}", json=post_data))
 
-    def get_asa_access_groups(
-        self,
-        working_set: str,
-        shared: bool = False,
-        resolve: str = (
-            "[targets/accessgroups.{@HEADER,editable,properties,issueTypes,issueDigest,deviceUid,deviceUids,"
-            "asaInterfaces,shared}]"
-        ),
-        sort: str = "name",
-        limit: int = 100,
-        offset: int = 0,
-    ):
-        """_summary_
+    def is_device_exists(self, device_uid: str) -> bool:
+        """Try to retrieve a device by uid. If it exists, return true, if not, catch error and return false
 
         Args:
-            working_set (str): Working set UID returned by get_asa_workingset()
-            shared (bool, optional): Defaults to False.
-            resolve (str, optional): Proopertiers to retrieve
-            sort (str, optional): Sort Order. Defaults to "name".
-            limit (int, optional): used in paging. Defaults to 100.
-            offset (int, optional): used in paging. Defaults to 0.
+            device_uid (str): uid of the device we are searching for
 
         Returns:
-            _type_: _description_
+            bool: If the device exists, return true, if not, catch error and return false
         """
-        params = {
-            "q": f"shared:{shared}",
-            "resolve": resolve,
-            "sort": sort,
-            "workingSet": working_set,
-            "limit": limit,
-            "offset": offset,
-        }
-        return [
-            AccessGroup(**item) for item in self.get_operation(f"{self.PREFIX_LIST['ACCESS_GROUPS']}", params=params)
-        ]
-
-    def get_asa_access_policy(self, policy_uid):
-        """Get the access-list rules (ACEs) for the given access policy.
-
-        Args:
-            policy_uid (str): The UID of the access-group that is the parent of this policy
-        """
-        return AccessGroup(**self.get_operation(f"{self.PREFIX_LIST['ACCESS_GROUPS']}/{policy_uid}"))
-
-    def is_device_exists(self, device_uid: str) -> bool:
-        """Try to retrieve a device by uid. If it exists, return true, if not, catch error and return false"""
         try:
             self.get_device(device_uid)
             return True
@@ -190,12 +165,14 @@ class CDODevices(CDOBaseClient):
             return False
 
     def is_state(self, device_uid: str, expected_state: str = "DONE") -> bool:
-        """_summary_
+        """Check to see if the device is in the state we expect it to be.
 
         Args:
             cdo_client (CDOClient): CDOClient instance
             device_uid (str): The device uid for which we want to retrieve state
             expected_state (str, optional): The state we wish to check for. Defaults to "DONE".
+        Returns:
+            bool: return True if the expected_state == the actual state, else false
         """
         test_device = self.get_device(device_uid)
         if test_device.state == expected_state:
@@ -203,16 +180,3 @@ class CDODevices(CDOBaseClient):
         else:
             logger.warning(f"Device's expected state {expected_state} not found!")
             return False
-
-    def update_access_policy(self, policy_uid: str, ace: AccessRule) -> AccessGroup:
-        """Update the access-policy with all of the access-rules presented
-
-        Args:
-            policy_uid (str): _description_
-            access_list (list[AccessRule]): AccessRules with we will replace/update the policy
-
-        Returns:
-            AccessGroup: modified access-group
-        """
-        payload = {"accessRules": [ace.dict(exclude_unset=True, by_alias=True)]}
-        return self.put_operation(f"{self.PREFIX_LIST['ACCESS_GROUPS']}/{policy_uid}", json=payload)

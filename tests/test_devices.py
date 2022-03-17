@@ -32,10 +32,6 @@ class TestCDODevices:
         matched_devices = cdo_client.get_target_devices(search=all_devices[0].name)
         assert matched_devices
 
-    def test_get_device_configs(self, cdo_client: CDOClient):
-        """TODO"""
-        logger.warning("TEST1234567890")
-
     def test_is_device_exists(self, cdo_client: CDOClient):
         all_devices = cdo_client.get_target_devices()
         assert cdo_client.is_device_exists(all_devices[0].uid)
@@ -59,7 +55,6 @@ class TestCDODevices:
                 assert device_obj.uid
 
     def test_get_asa_config_objs(self, cdo_client: CDOClient):
-        """ """
         test_device = None
         all_devices = cdo_client.get_target_devices()
         for device in all_devices:
@@ -91,28 +86,3 @@ class TestCDODevices:
         asa = cdo_client.get_asa("TatianeASA")
         workingset = cdo_client.get_workingset(asa.target_device.uid)
         assert workingset
-
-    def test_get_access_groups(self, cdo_client: CDOClient):
-        asa = cdo_client.get_asa("TatianeASA")
-        workingset = cdo_client.get_workingset(asa.target_device.uid)
-        access_policies = cdo_client.get_asa_access_groups(workingset["uid"])
-        assert access_policies
-
-    def test_get_access_policy(self, cdo_client: CDOClient):
-        asa = cdo_client.get_asa("TatianeASA")
-        workingset = cdo_client.get_workingset(asa.target_device.uid)
-        access_groups = cdo_client.get_asa_access_groups(workingset.uid)
-        access_list = cdo_client.get_asa_access_policy(access_groups[0].uid)
-        assert access_list
-
-    def test_update_policy(sefl, cdo_client: CDOClient):
-        asa = cdo_client.get_asa("TatianeASA")
-        workingset = cdo_client.get_workingset(asa.target_device.uid)
-        access_groups = cdo_client.get_asa_access_groups(workingset.uid)
-        access_list = cdo_client.get_asa_access_policy(access_groups[0].uid)
-        ace = access_list.access_rules[0]
-        assert ace.protocol.name == "ip"
-        ace.protocol.name = "tcp"
-        modified_acl = cdo_client.update_access_policy(access_groups[0].uid, ace)
-        # Deletes anything not in the update!
-        assert modified_acl

@@ -2,6 +2,7 @@ import os
 import logging
 from pycdo import CDOClient
 from pycdo.polling import Polling
+from pycdo.model.devices import Device
 from pycdo.model.connectors import Connector
 from pycdo.errors import AddDeviceException, AddCredentialsException
 
@@ -17,7 +18,7 @@ class MyASAOnboard:
 
         self.cdo_client = CDOClient(cdo_token, cdo_region)
         self.connector: Connector = None
-        self.asa_device = None
+        self.asa_device: Device = None
 
     def get_connector(self, connector_name: str) -> None:
         """Get the connector (SDC/Cloud Connector) used to commnuicate with the ASA"""

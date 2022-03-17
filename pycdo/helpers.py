@@ -1,10 +1,13 @@
+import os
+
 # TODO: Make the version a variable
 PREFIX_LIST = {
+    "ACCESS_GROUPS": "/aegis/rest/v1/services/targets/accessgroups",
+    "ASA_CONFIGS": "/aegis/rest/v1/services/asa/configs",
+    "ASA_DEVICES_CONFIGS": "/aegis/rest/v1/services/asa/devices-configs",
     "CHANGELOG_QUERY": "/aegis/rest/changelogs/query",
     "DEBUGGING": "/aegis/rest/v1/services/state-machines/debugging",
-    "DEVICE": "/aegis/rest/v1/device",
-    "DEVICES": "/aegis/rest/v1/services/targets/devices",
-    "DEVICES-CONFIGS": "/aegis/rest/v1/services/asa/devices-configs",
+    "DEVICE": "/aegis/rest/v1/device",  # Maps instance device (eg ASA, FTD) to Target Device
     "INSTANCES": "/aegis/rest/v1/services/state-machines/instances",
     "JOBS": "/aegis/rest/v1/services/state-machines/jobs",
     "MSSP_DEVICES": "/api/theia/v1/devices",
@@ -13,10 +16,12 @@ PREFIX_LIST = {
     "OBJECTS": "/aegis/rest/v1/services/targets/objects",
     "CONNECTORS": "/aegis/rest/v1/services/targets/proxies",
     "SERVICES": "/aegis/rest/v1/services",
+    "TARGET_DEVICES": "/aegis/rest/v1/services/targets/devices",  # Target Device represents the actual object in CDO
     "TENANTS": "/anubis/rest/v1/user/tenants",
     "TENANT_AUTH": "/anubis/rest/v1/oauth",
     "TENANT_CONTEXT": "/aegis/rest/v1/services/common/tenantcontext",
     "TENANT_USERS": "/anubis/rest/v1/users",
+    "WORKINGSET": "/aegis/rest/v1/services/common/workingset",
 }
 
 # move to enum in appropriate class
@@ -27,15 +32,6 @@ DEVICE_TYPES = {
     "AWS": "AWS_VPC OR (deviceSubType:AWS_VPC)",
     "MERAKI": "MERAKI_SECURITY_APPLIANCE OR (deviceSubType:MERAKI_SECURITY_APPLIANCE)",
     "UMBRELLA": "UMBRELLA OR (deviceSubType:UMBRELLA)",
-}
-
-CDO_REGION = {
-    "us": "www.defenseorchestrator.com",
-    "eu": "defenseorchestrator.eu",
-    "apj": "apj.cdo.cisco.com",
-    "prodeu": "EMEA",
-    "prod": "US",
-    "prodapj": "APJ",
 }
 
 # move to enum in appropriate class

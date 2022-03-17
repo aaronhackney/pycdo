@@ -34,12 +34,6 @@ class CDOASAServices(CDOBaseClient):
     def get_asa_exports(self, export_uid):
         return self.get_operation(f"{self.PREFIX_LIST['SERVICES']}/asa/exports/{export_uid}")
 
-    def get_asa_devices_configs_list(self):
-        return self.get_operation(f"{self.PREFIX_LIST['SERVICES']}/asa/devices-configs")
-
-    def get_asa_devices_configs(self, devices_configs_uid):
-        return self.get_operation(f"{self.PREFIX_LIST['SERVICES']}/asa/devices-configs/{devices_configs_uid}")
-
     def get_asa_templates_list(self):
         return self.get_operation(f"{self.PREFIX_LIST['SERVICES']}/asa/templates")
 

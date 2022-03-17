@@ -15,7 +15,7 @@ class TestPolling:
 
     def test_polling_service(self, cdo_client: CDOClient):
         poll = Polling()
-        devices = cdo_client.get_devices()
+        devices = cdo_client.get_target_devices()
         for device in devices:
             if device.device_type == "ASA":
                 test_device_uid = device.uid
@@ -24,7 +24,7 @@ class TestPolling:
 
     def test_polling_fail(self, cdo_client: CDOClient):
         poll = Polling()
-        devices = cdo_client.get_devices()
+        devices = cdo_client.get_target_devices()
         for device in devices:
             if device.device_type == "ASA":
                 test_device_uid = device.uid

@@ -42,7 +42,7 @@ class CDOOnboard(CDOBaseClient):
             "model": False,
             "metadata": {"isNewPolicyObjectModel": True},
         }
-        onboarded_asa = Device(**self.post_operation(f"{self.PREFIX_LIST['DEVICES']}", json=post_data))
+        onboarded_asa = Device(**self.post_operation(f"{self.PREFIX_LIST['TARGET_DEVICES']}", json=post_data))
         return onboarded_asa
 
     def set_credentials(self, device_uid: str, asa_user: str, asa_pass: str, sdc: Connector) -> dict:

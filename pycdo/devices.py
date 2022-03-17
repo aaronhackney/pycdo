@@ -1,6 +1,7 @@
 from pycdo.model.asa.asa import ASA
+from pycdo.model.asa.access_rule import AccessRule, AccessGroup
 from pycdo.base import CDOBaseClient
-from pycdo.model.devices import ASADevice, Device, FTDDevice, DeviceConfig
+from pycdo.model.devices import ASADevice, Device, FTDDevice, DeviceConfig, WorkingSet
 from requests import HTTPError
 from typing import List
 import logging
@@ -119,13 +120,20 @@ class CDODevices(CDOBaseClient):
         """
         return FTDDevice(**self.get_operation(f"{self.PREFIX_LIST['DEVICE']}/{device_uid}/specific-device"))
 
-    def get_working_set(self):
-        """POST /aegis/rest/v1/services/common/workingset
-        DATA=
-        {"selectedModelObjects":[{"modelClassKey":"targets/devices","uuids":["511524f1-e76d-4597-9055-e0264a0d2442"]}],"workingSetFilterAttributes":[]}
+    def get_workingset(self, target_uid):
+        """Get the working set for operations like access-policies
 
+        Args:
+            target_uid (str): The CDO target object UID
 
+        Returns:
+            dict: type: workingset namespace: common
         """
+        post_data = {
+            "selectedModelObjects": [{"modelClassKey": "targets/devices", "uuids": [target_uid]}],
+            "workingSetFilterAttributes": [],
+        }
+        return WorkingSet(**self.post_operation(f"{self.PREFIX_LIST['WORKINGSET']}", json=post_data))
 
     def get_asa_access_groups(
         self,
@@ -160,33 +168,17 @@ class CDODevices(CDOBaseClient):
             "limit": limit,
             "offset": offset,
         }
-        return self.get_operation(f"{self.PREFIX_LIST['ACCESS_GROUPS']}", params=params)
+        return [
+            AccessGroup(**item) for item in self.get_operation(f"{self.PREFIX_LIST['ACCESS_GROUPS']}", params=params)
+        ]
 
     def get_asa_access_policy(self, policy_uid):
-        # TODO: Model access-list data access_list['namespace']=targets, access_list['type']=accessgroups
         """Get the access-list rules (ACEs) for the given access policy.
 
         Args:
             policy_uid (str): The UID of the access-group that is the parent of this policy
         """
-        return self.get_operation(f"{self.PREFIX_LIST['ACCESS_POLICIES']}/{policy_uid}")
-
-    def get_asa_workingset(self, target_uid):
-        # TODO: Model working set data
-        """Get the working set for operations like access-policies
-
-        Args:
-            target_uid (str): The CDO target object UID
-
-        Returns:
-            dict: type: workingset namespace: common
-        """
-        post_data = {
-            "selectedModelObjects": [{"modelClassKey": "targets/devices", "uuids": [target_uid]}],
-            "workingSetFilterAttributes": [],
-        }
-
-        return self.post_operation(f"{self.PREFIX_LIST['WORKINGSET']}", json=post_data)
+        return AccessGroup(**self.get_operation(f"{self.PREFIX_LIST['ACCESS_GROUPS']}/{policy_uid}"))
 
     def is_device_exists(self, device_uid: str) -> bool:
         """Try to retrieve a device by uid. If it exists, return true, if not, catch error and return false"""

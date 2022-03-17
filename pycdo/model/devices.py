@@ -123,3 +123,10 @@ class FTDDevice(Device):
     ftd_ha_error: Optional[dict] = Field(alias="ftdHaError")
     ftd_smart_license_status: Optional[dict] = Field(alias="ftdSmartLicenseStatus")
     ha_combined_device: Optional[bool] = Field(alias="haCombinedDevice")
+
+
+class WorkingSet(CDOContext):
+    active_model_objects: Optional[list] = Field(alias="activeModelObjects")
+    selected_model_objects: Optional[list] = Field(alias="selectedModelObjects")
+    working_set_filter_attributes: Optional[list] = Field(alias="workingSetFilterAttributes")
+    date_for_purge: Optional[datetime] = Field(alias="dateForPurge")

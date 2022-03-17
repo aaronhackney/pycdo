@@ -38,13 +38,27 @@ class AccessRule(BaseModel):
     issues: Optional[list]
     access_control_entries_count: Optional[int] = Field(alias="accessControlEntriesCount")
     line_num: Optional[int] = Field(alias="lineNum")
-    content_uuids: Optional[list] = Field(alias="contentUUIDs")
+    content_uuids: Optional[List[str]] = Field(alias="contentUUIDs")
     referenced_contents: Optional[list] = Field(alias="referencedContents")
 
 
 class AccessGroup(CDOContext):
-    name: Optional[str]
-    ipaddress: Optional[str]
-    subnet_mask: Optional[str] = Field(alias="subnetMask")
-    object_name: Optional[str] = Field(alias="objectName")
-    is_active: Optional[bool] = Field(alias="isActive")
+    access_rules: Optional[List[AccessRule]] = Field(alias="accessRules")
+    shared: Optional[bool]
+    shared_detector_digest: Optional[str] = Field(alias="sharedDetectorDigest")
+    editable: Optional[bool]
+    properties: Optional[dict]
+    num_access_rules: Optional[int] = Field(alias="numAccessRules")
+    issue_types: Optional[list] = Field(alias="issueTypes")
+    issue_counts: Optional[int] = Field(alias="issueCounts")
+    access_control_entry_counts: Optional[dict] = Field(alias="accessControlEntryCounts")  # TODO: model
+    digests: Optional[list]
+    global_remark: Optional[str] = Field(alias="globalRemark")
+    asa_interfaces: Optional[list] = Field(alias="asaInterfaces")
+    directions: Optional[list]
+    device_uid: Optional[str] = Field(alias="deviceUid")
+    edited_object_uids: Optional[list] = Field(alias="deviceUids")
+    device_uids: Optional[list] = Field(alias="deviceUids")
+    issue_digest: Optional[str] = Field(alias="issueDigest")
+    content_uuids: Optional[list] = Field(alias="contentUUIDs")
+    referenced_contents: Optional[list] = Field(alias="referencedContents")

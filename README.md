@@ -39,11 +39,26 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>>
 ```
 # How to use
-The easist way to see how to use the API library is to look at the pytest tests in the tests directory. But the client requires a CDO token and CDO region
+The easist way to see how to use the API library is to look at the pytest tests in the tests directory. But the client requires a CDO token and CDO region [defenseorchestrator.com, "apj.cdo.cisco.com" "defenseorchestrator.eu"]
 ```
 >>> from pycdo import CDOClient
->>> cdo_client = CDOClient("1234567890", "us")
+>>> cdo_client = CDOClient("1234567890", "defenseorchestrator.com")
 >>>
+```
+
+# Test Cases
+The test cases require a number of environment variables to be avaialbe. Here is a sample:
+```
+CDO_REGION = "defenseorchestrator.com"
+CDO_TOKEN = "yourcdotokengoeshere"
+SEARCH_TENANT = "youtenantname"
+ASA_USER = "yourasausername"
+ASA_PASS = "yourpassword"
+ASA_IP = "10.10.10.10"
+ASA_NAME = "pytest-asav-1"
+ASA_PORT = "8443"
+CONNECTOR_NAME = "yourconnectorname"
+TEST_ASA_NAME = "yourasanameincdo"
 ```
 # License
 MIT License - See LICENSE.TXT for full text  

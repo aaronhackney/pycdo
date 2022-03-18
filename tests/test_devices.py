@@ -1,6 +1,8 @@
-from requests.exceptions import HTTPError
-from pycdo import CDOClient
 import logging
+import os
+
+from pycdo import CDOClient
+from requests.exceptions import HTTPError
 
 logger = logging.getLogger(__name__)
 
@@ -23,9 +25,13 @@ class TestCDODevices:
                 test = cdo_client.get_device(device.uid)
                 assert test
             except HTTPError as ex:
-                logger.warning(f"Device {device.name} of type {device.device_type} was not found")
-                logger.warning("Not every device type has a corresponding 'specific-device' record.")
-                logger.warning("For example: DUO_ADMIN_PANEL, GENERIC_SSH, and IOS")
+                logger.warning(
+                    (
+                        f"Device {device.name} of type {device.device_type} was not found."
+                        "Not every device type has a corresponding 'specific-device' record."
+                        "For example: DUO_ADMIN_PANEL, GENERIC_SSH, and IOS"
+                    )
+                )
 
     def test_get_devices_search(self, cdo_client: CDOClient):
         all_devices = cdo_client.get_target_devices()
@@ -55,6 +61,7 @@ class TestCDODevices:
                 assert device_obj.uid
 
     def test_get_asa_config_objs(self, cdo_client: CDOClient):
+        """There needs to be at least 1 ASA in the tenant for this test"""
         test_device = None
         all_devices = cdo_client.get_target_devices()
         for device in all_devices:
@@ -62,27 +69,13 @@ class TestCDODevices:
                 test_device = device
                 break
         if test_device:
-            device_config = cdo_client.get_asa_device_config_map(test_device.uid)[0]
+            device_config = cdo_client.get_asa_device_config_map(test_device.uid)
             asa_config_obj = cdo_client.get_asa_config_obj(device_config.target["uid"])
             assert asa_config_obj
         else:
             assert False  # We need an ASA for the test
 
-    def test_get_config_summaries(self, cdo_client: CDOClient):
-        test_device = None
-        all_devices = cdo_client.get_target_devices()
-        for device in all_devices:
-            if device.device_type == "ASA":
-                test_device = device
-                break
-        device_summary = cdo_client.get_device_summaries(test_device.uid)
-        print()
-
-    def test_get_asa(self, cdo_client: CDOClient):
-        asa = cdo_client.get_asa("TatianeASA")
-        assert asa.asa
-
     def test_get_asa_workingset(self, cdo_client: CDOClient):
-        asa = cdo_client.get_asa("TatianeASA")
+        asa = cdo_client.get_asa(os.environ.get("TEST_ASA_NAME"))
         workingset = cdo_client.get_workingset(asa.target_device.uid)
         assert workingset

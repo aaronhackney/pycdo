@@ -1,4 +1,3 @@
-from pycdo.model.asa.asa import ASA
 from pycdo.base import CDOBaseClient
 from pycdo.model.devices import ASADevice, Device, FTDDevice, DeviceConfig, WorkingSet
 from requests import HTTPError
@@ -58,10 +57,6 @@ class CDODevices(CDOBaseClient):
         result = self.get_operation(f"{self.PREFIX_LIST['ASA_DEVICES_CONFIGS']}", params=params)
         if result:
             return DeviceConfig(**result[0])
-        # return [
-        #     DeviceConfig(**device)
-        #     for device in self.get_operation(f"{self.PREFIX_LIST['ASA_DEVICES_CONFIGS']}", params=params)
-        # ]
 
     def get_asa_config_obj(
         self,
@@ -84,28 +79,6 @@ class CDODevices(CDOBaseClient):
         result = self.get_operation(f"{self.PREFIX_LIST['ASA_CONFIGS']}", params=params)
         if result:
             return ASADevice(**result[0])
-
-    def get_asa(self, name: str) -> ASA:
-        """This call removes the tedious tasks of matching up a CDO object to an ASA object and associated records
-
-        Args:
-            name (str): The name of the ASA object in CDO that we wish to retrieve
-
-        Returns:
-            ASA: ASA object that contains the linked, associated objects and UIDs
-        """
-        asa = ASA(name=name)
-        for device in self.get_target_devices(search=name):
-            if device.name == name:
-                asa.target_device = device  # Get the target device details
-                if asa.target_device:
-                    asa.device_config = self.get_asa_device_config_map(
-                        asa.target_device.uid
-                    )  # get the target-to-device mapping
-                    asa.asa = self.get_asa_config_obj(
-                        asa.device_config.target["uid"]
-                    )  # Get the actual ASA object in CDO
-                    return asa
 
     def identify_device(self, device):
         """Given a devie object, attempt to returned a specific device type (ASA, FTD, etc)

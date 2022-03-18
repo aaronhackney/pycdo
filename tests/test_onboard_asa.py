@@ -5,13 +5,23 @@ import os
 
 
 class TestOnboardingASA:
-    # TODO: Move test device details to environment variables
-    ASA_NAME = "pytest-asav-1"
-    ASA_IP = "172.30.4.101"
-    ASA_PORT = "8443"
+    """Test for automated ASA onboarding. The in additon to the usual CDO_TOKEN and CDO_REGION environment varaibles,
+    the following environment variables will be needed (Sample values):
+
+     ASA_NAME="MY-ASA"
+     ASA_IP"10.10.10.10"
+     ASA_PORT="8443"
+     ASA_USER="admin"
+     ASA_PASS="myadminpassword"
+     SDC="my-sdc-name"
+    """
+
+    ASA_NAME = os.environ.get("ASA_NAME")
+    ASA_IP = os.environ.get("ASA_IP")
+    ASA_PORT = os.environ.get("ASA_PORT")
     ASA_USER = os.environ.get("ASA_USER")
     ASA_PASS = os.environ.get("ASA_PASS")
-    SDC = "CDO_cisco_aahackne-SDC-1"
+    SDC = os.environ.get("CONNECTOR_NAME")
 
     def test_set_asa_credentials(self, cdo_client: CDOClient):
         sdcs = cdo_client.get_sdc_list()

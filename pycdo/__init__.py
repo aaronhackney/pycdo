@@ -10,13 +10,22 @@ from pycdo.state_machine import CDOStateMachines
 from pycdo.objects import CDOObjects
 from pycdo.connectors import CDOConnectors
 from pycdo.onboard import CDOOnboard
+from pycdo.asa.asa import CDOASA
 from pycdo.asa.access_policies import CDOASAAccessPolicies
 
 log = logging.getLogger(__name__)
 
 
 class CDOClient(
-    CDOTenants, CDODevices, CDOChangeLogs, CDOStateMachines, CDOObjects, CDOConnectors, CDOOnboard, CDOASAAccessPolicies
+    CDOTenants,
+    CDODevices,
+    CDOChangeLogs,
+    CDOStateMachines,
+    CDOObjects,
+    CDOConnectors,
+    CDOOnboard,
+    CDOASAAccessPolicies,
+    CDOASA,
 ):
     """
     This package brings provides API access to Cisco Defense Orchestrator (CDO)
